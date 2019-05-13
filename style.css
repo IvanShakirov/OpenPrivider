@@ -1,7 +1,7 @@
-#MaxRows {
-  width: 200px; }
+.form-control {
+  width: 100px; }
 
-h1 {
-  color: grey; }
+#MaxRowsContainer {
+  justify-items: center; }
 
 /*# sourceMappingURL=style.css.map */

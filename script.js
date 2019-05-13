@@ -1,15 +1,39 @@
-function filling_table(api_answer) {
-    for(i=0; i<150;i++)
+function filling_table(api_answer,index) {
+    $('table tbody tr').remove();
+    for(var i=0; i<index.length;i++)
     {
-        $('table tbody').append($("<tr>"));
-        // $('table tbody tr').eq(i).html.append("<th>"+api_answer[i].id+"</th>");
-        // $('table tbody tr').eq(i).html("<td>"+api_answer[i].id+"</td>");
-        // $('table tbody tr').eq(i).text.append("<td>"+api_answer[i].id+"</td>");
-        // $('table tbody tr').eq(i).text("<td>"+api_answer[i].id+"</td>");
-    $('table tbody tr').eq(i).append($("<th>").text(api_answer[i].id));
-    $('table tbody tr').eq(i).append($("<td>").text(api_answer[i].owner.login));
-    $('table tbody tr').eq(i).append($("<td>").text(api_answer[i].name));
-    $('table tbody tr').eq(i).append($("<td>").text(api_answer[i].description));
+    $('table tbody').append($("<tr>"));
+    $('table tbody tr').eq(i).append($("<td>").text(api_answer[index[i]].id));
+    $('table tbody tr').eq(i).append($("<td>").text(api_answer[index[i]].owner.login));
+    $('table tbody tr').eq(i).append($("<td>").text(api_answer[index[i]].name));
+    $('table tbody tr').eq(i).append($("<td>").text(api_answer[index[i]].description));
+    }
+
+}
+function name_filter(api_answer) {
+    var text='';
+    var index=[];
+    var k=0;
+    $('.search input').on('keyup', function () {
+        text = $(this).val();
+        k=0;
+        for( var i=0; i<api_answer.length; i++)
+        {
+            if (api_answer[i].owner.login.indexOf(text)!==-1 ){
+                index[k]=i;
+                k++;
+            }
+        }
+        filling_table(api_answer,index);
+        index.length=0;
+    });
+    if(text===''){
+        for( var i=0; i<api_answer.length ; i++)
+        {
+            index[i]=i;
+        }
+        filling_table(api_answer,index);
+        index.length=0;
     }
 }
 function pagination() {
@@ -23,7 +47,6 @@ function pagination() {
             trnum++;
             if (trnum > maxRows ){
                 $(this).hide();
-                
             }if (trnum <= maxRows ){$(this).show();}
         });
         if (totalRows > maxRows){
@@ -48,25 +71,26 @@ function pagination() {
             });
         });
     });
-    $(function(){
-        $('table tr:eq(0)').prepend('<th> ID </th>');
-        var id = 0;
-        $('table tr:gt(0)').each(function(){
-            id++;
-            $(this).prepend('<td>'+id+'</td>');
-        });
-    })
+    // $(function(){
+    //     $('table tr:eq(0)').prepend('<th> ID </th>');
+    //     var id = 0;
+    //     $('table tr:gt(0)').each(function(){
+    //         id++;
+    //         $(this).prepend('<td>'+id+'</td>');
+    //     });
+    // })
 }
 function f() {
 var a;
 $.ajax({
-   url: 'https://api.github.com/repositories?since=364',
+   url: 'https://api.github.com/repositories',
     type: "GET",
     success: function(resultData){
        a=resultData;
        console.log(a);
-       filling_table(resultData);
-       pagination();
+     //  filling_table(resultData);
+        name_filter(resultData);
+        pagination();
     }
 });
 
