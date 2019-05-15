@@ -101,16 +101,14 @@ function pagination(api_answer) {
             since = PrevSince[StartPageIndex];
             StartPageIndex--;
             filling_table()
-        }  if ($(this).attr('data-sign')=== "Next") {
+        } else if ($(this).attr('data-sign')=== "Next") {
             StartPageIndex++;
-            since = api_answer[MaxRows-1].id+1;
+            since = api_answer[MaxRows-1].id;
             PrevSince[StartPageIndex]=api_answer[0].id -1;
             filling_table();
-            console.log(api_answer);
         }
             $(table + ' tr:gt(0)').each(function a() {
                 TrIndex++;
-
                 if (TrIndex > (MaxRows * pageNum) || TrIndex <= ((MaxRows * pageNum) - MaxRows)) {
                     $(this).hide();
                 } else {
